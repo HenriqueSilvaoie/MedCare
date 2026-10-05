@@ -1,6 +1,6 @@
-package com.empresa.MedCare.paciente;
+package com.empresa.MedCare.patient;
 
-import com.empresa.MedCare.convenio.HealthInsurance;
+import com.empresa.MedCare.insurance.HealthInsurance;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
