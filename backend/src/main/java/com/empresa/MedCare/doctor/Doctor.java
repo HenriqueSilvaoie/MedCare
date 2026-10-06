@@ -1,26 +1,29 @@
 package com.empresa.MedCare.doctor;
 
+import com.empresa.MedCare.common.model.Person;
+import com.empresa.MedCare.insurance.HealthInsurance;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "doctors")
-public class Doctor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Doctor extends Person {
+    @Column(name = "crm", nullable = false, unique = true, length = 20)
+    private String crm;
 
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
+    @Column(nullable = false, length = 50)
+    private String speciality;
 
-    @Column(name = "crm", nullable = false, unique = true)
-    private String CRM;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "health_insurance_id")
+    private HealthInsurance healthInsurance;
 }
