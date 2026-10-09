@@ -1,5 +1,6 @@
 package com.empresa.MedCare.common.model;
 
+import com.empresa.MedCare.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,4 +31,8 @@ public abstract class Person {
 
     @Column(length = 20, nullable = false)
     private String phone;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
