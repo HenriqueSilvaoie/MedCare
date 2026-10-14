@@ -2,6 +2,7 @@ package com.empresa.MedCare.doctor;
 
 import com.empresa.MedCare.common.model.Person;
 import com.empresa.MedCare.insurance.HealthInsurance;
+import com.empresa.MedCare.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,4 +27,8 @@ public class Doctor extends Person {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "health_insurance_id")
     private HealthInsurance healthInsurance;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 }

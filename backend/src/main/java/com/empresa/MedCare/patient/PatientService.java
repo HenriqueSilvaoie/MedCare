@@ -2,49 +2,50 @@ package com.empresa.MedCare.patient;
 
 import com.empresa.MedCare.insurance.HealthInsurance;
 import com.empresa.MedCare.insurance.HealthInsuranceRepository;
+import com.empresa.MedCare.user.User;
+import com.empresa.MedCare.user.UserRepository;
+import com.empresa.MedCare.user.UserRole;
+import com.empresa.MedCare.user.UserService;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class PatientService {
 
     private final PatientRepository patientRepository;
     private final HealthInsuranceRepository healthInsuranceRepository;
-
-    public PatientService(
-            PatientRepository patientRepository,
-            HealthInsuranceRepository healthInsuranceRepository) {
-        this.patientRepository = patientRepository;
-        this.healthInsuranceRepository = healthInsuranceRepository;
-    }
+    private final UserService userService;
 
     @Transactional
-    public Patient registerPatient(
-            String name,
-            String cpf,
-            String email,
-            String phone,
-            Long healthInsuranceId) {
-        /*Usado por dois motivos:
-            1º porque nem todo paciente possui um convênio
-            2º porque no BD "healthInsurance" é um objeto, e não um ID. Logo, para vincular
-               o paciente ao banco de dados, é necessário passar o objeto.
-        */
-        HealthInsurance healthInsurance = null;
+    public Patient registerPatient(PatientDTO dto) {
 
-        if (healthInsuranceId != null) {
-            healthInsurance = healthInsuranceRepository.findById(healthInsuranceId)
-                    .orElseThrow(() -> new RuntimeException("Convênio não encontrado com o ID " + healthInsuranceId));
-        }
+        HealthInsurance healthInsurance = findHealthInsuranceIfExists(dto.healthInsuranceId());
+
+        User user = userService.createUser(dto.email(), dto.password(), UserRole.ROLE_PATIENT);
 
         Patient patient = Patient.builder()
-                .name(name)
-                .cpf(cpf)
-                .email(email)
-                .phone(phone)
+                .name(dto.name())
+                .cpf(dto.cpf())
+                .email(dto.email())
+                .phone(dto.phone())
                 .healthInsurance(healthInsurance)
+                .user(user)
                 .build();
+
         return patientRepository.save(patient);
+    }
+
+    /*método criado por dois motivos:
+            1º porque nem todo paciente possui um convênio
+            2º porque no BD o convênio é um objeto, e o que é passado nos parâmetros é um ID.
+        */
+    private HealthInsurance findHealthInsuranceIfExists(Long healthInsuranceId) {
+        if (healthInsuranceId == null) return null;
+        return healthInsuranceRepository.findById(healthInsuranceId)
+                .orElseThrow(() -> new RuntimeException("Convênio não encontrado com o ID " + healthInsuranceId));
     }
 
 
