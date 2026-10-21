@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class PatientService {
@@ -38,15 +40,19 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
+    @Transactional
+    public Patient findByCpf(String cpf) {
+        return patientRepository.findByCpf(cpf).orElseThrow(
+                ()-> new RuntimeException("Paciente não encontrado para o CPF digitado"));
+    }
+
     /*método criado por dois motivos:
-            1º porque nem todo paciente possui um convênio
-            2º porque no BD o convênio é um objeto, e o que é passado nos parâmetros é um ID.
+            1º pois nem todo paciente possui um convênio
+            2º pois no BD o convênio é um objeto, e o que é passado nos parâmetros é um ID.
         */
     private HealthInsurance findHealthInsuranceIfExists(Long healthInsuranceId) {
         if (healthInsuranceId == null) return null;
         return healthInsuranceRepository.findById(healthInsuranceId)
                 .orElseThrow(() -> new RuntimeException("Convênio não encontrado com o ID " + healthInsuranceId));
     }
-
-
 }

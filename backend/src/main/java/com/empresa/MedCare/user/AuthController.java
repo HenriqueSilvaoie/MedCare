@@ -23,7 +23,7 @@ public class AuthController {
                 .orElseThrow(() -> new RuntimeException("email não encontrado"));
         if(passwordEncoder.matches(dto.password(), user.getPassword())) {
             String token = this.tokenService.generateToken(user);
-            return ResponseEntity.ok("Usuário logado");
+            return ResponseEntity.ok("Usuário logado\ntoken provisorio: " + token );
         }
         return ResponseEntity.badRequest().build();
     }

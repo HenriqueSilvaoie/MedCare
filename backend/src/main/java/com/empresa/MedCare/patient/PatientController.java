@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/patients")
@@ -18,5 +20,12 @@ public class PatientController {
         Patient newPatient = patientService.registerPatient(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newPatient);
     }
+
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<Patient> getPatientByCpf(@PathVariable String cpf) {
+        Patient getPatient = patientService.findByCpf(cpf);
+        return ResponseEntity.status(HttpStatus.OK).body(getPatient);
+    }
+
 
 }
