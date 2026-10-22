@@ -1,0 +1,28 @@
+mat-toolbar {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Elemento Pai: faz o alinhamento central */
+.main-container {
+  display: flex;
+  justify-content: center; /* Centraliza na HORIZONTAL */
+  align-items: center;     /* Centraliza na VERTICAL */
+  min-height: calc(100dvh - 64px); /* Ocupa a altura total da tela (descontando a navbar) */
+  width: 100%;
+}
+
+
+.form-container {
+  background-color: #00a7aa;
+  border: 2px;
+  width: 1000px;
+  height: 200px;
+  padding: 50px;
+  
+}
